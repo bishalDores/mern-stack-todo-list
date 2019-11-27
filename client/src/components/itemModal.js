@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 import { connect } from 'react-redux';
+import {addItems} from '../actions/itemActions';
+
+import uuid from 'uuid';
 
 const ItemModal = (props) => {
   const {
@@ -15,6 +18,13 @@ const ItemModal = (props) => {
   
   const onSubmit = e =>{
       e.preventDefault();
+
+      const newItem = {
+          id: uuid(),
+          name:name
+      }
+      props.addItems(newItem);
+      toggle();
 
   }
   const onChangeHandler = (e) =>{
@@ -45,5 +55,9 @@ const ItemModal = (props) => {
     </div>
   );
 }
+const mapStateToProps = (state) =>({});
+const mapDispatchToProps = dispatch => ({
+    addItems: (item) => dispatch(addItems(item)),
 
-export default connect()(ItemModal);
+})
+export default connect(mapStateToProps,mapDispatchToProps)(ItemModal);

@@ -11,3 +11,10 @@ export const deleteItems = id => {
         payload:id
     }
 }
+export const addItems = item => {
+    console.log(item)
+    return {
+        type: ADD_ITEMS,
+        payload:item
+    }
+}
