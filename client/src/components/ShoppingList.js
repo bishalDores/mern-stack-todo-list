@@ -3,22 +3,18 @@ import { Container, ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getItems } from '../actions/itemActions';
+import { getItems,deleteItems } from '../actions/itemActions';
 
 
-const ShoppingList = ({items,getItems}) => {
+const ShoppingList = ({items,getItems,deleteItems}) => {
     useEffect(()=>{
         getItems();
-    },[])
+    },[]);
+    const onDeleteHandler = (id) =>{
+        deleteItems(id);
+        }
     return (
-       <Container>
-           <Button 
-           color="dark"
-           style={{marginBottom:'2rem'}}
-           onClick={()=>{}}
-           >
-                Add Item
-           </Button>
+       <>
            <ListGroup>
                <TransitionGroup className="shopping-list">
                     {
@@ -32,11 +28,7 @@ const ShoppingList = ({items,getItems}) => {
                                      color= "danger"
                                      size="sm"
                                      style={{marginRight:'20px'}}
-                                     onClick={()=>{
-                                         let tempItems = items;
-                                         tempItems = tempItems.filter(el =>el.id !== item.id);
-                                        //  setItems(tempItems);
-                                     }}
+                                     onClick={()=>onDeleteHandler(item.id)}
                                     >
                                         &times;
                                     </Button>
@@ -47,17 +39,19 @@ const ShoppingList = ({items,getItems}) => {
                     }
                </TransitionGroup>
            </ListGroup>
-       </Container> 
+       </> 
     )
 };
 ShoppingList.propTypes = {
     items: PropTypes.array.isRequired,
-    getItems: PropTypes.func.isRequired
+    getItems: PropTypes.func.isRequired,
+    deleteItems: PropTypes.func.isRequired,
 }
 const mapStateToProps = (state) =>({
     items: state.item.items
 });
 const mapDispatchToProps = dispatch => ({
-    getItems: () => dispatch(getItems())
+    getItems: () => dispatch(getItems()),
+    deleteItems: (id) => dispatch(deleteItems(id))
 })
 export default connect(mapStateToProps,mapDispatchToProps)(ShoppingList);
