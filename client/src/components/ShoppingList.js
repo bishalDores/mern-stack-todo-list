@@ -19,16 +19,15 @@ const ShoppingList = ({items,getItems,deleteItems}) => {
                <TransitionGroup className="shopping-list">
                     {
                         items ? items.map(item=>{
-                            console.log(item)
                             return (
-                            <CSSTransition key={item.id} timeout={500} classNames="fade">
+                            <CSSTransition key={item._id} timeout={500} classNames="fade">
                                 <ListGroupItem>
                                     <Button
                                      className="remove-btn"
                                      color= "danger"
                                      size="sm"
                                      style={{marginRight:'20px'}}
-                                     onClick={()=>onDeleteHandler(item.id)}
+                                     onClick={()=>onDeleteHandler(item._id)}
                                     >
                                         &times;
                                     </Button>

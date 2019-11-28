@@ -1,20 +1,30 @@
-import { GET_ITEMS, ADD_ITEMS, DELETE_ITEMS } from '../actions/types';
+import axios from 'axios';
+import { GET_ITEMS, ADD_ITEMS, DELETE_ITEMS, ITEMS_LOADING } from '../actions/types';
 
-export const getItems = () => {
-    return {
-        type: GET_ITEMS
-    }
+export const getItems = () => dispatch => {
+    dispatch(setItemsLoading());
+    axios.get('/api/items')
+         .then(res => dispatch({
+            type: GET_ITEMS,
+            payload: res.data   
+         }))
 }
-export const deleteItems = id => {
-    return {
-        type: DELETE_ITEMS,
-        payload:id
-    }
+export const deleteItems = id =>dispatch=> {
+    axios.delete(`/api/items/${id}`)
+         .then(res => dispatch({
+            type: DELETE_ITEMS,
+            payload:id   
+         }))
 }
-export const addItems = item => {
-    console.log(item)
+export const addItems = item => dispatch => {
+    axios.post('/api/items',item)
+         .then(res => dispatch({
+            type: ADD_ITEMS,
+            payload:res.data
+        }))
+}
+export const setItemsLoading = () => {
     return {
-        type: ADD_ITEMS,
-        payload:item
+        type: ITEMS_LOADING,
     }
 }
