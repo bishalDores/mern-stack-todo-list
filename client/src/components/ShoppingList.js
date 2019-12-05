@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { Container, ListGroup, ListGroupItem, Button } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem, Button, Spinner } from 'reactstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -13,6 +13,7 @@ const ShoppingList = ({items,getItems,deleteItems}) => {
     const onDeleteHandler = (id) =>{
         deleteItems(id);
         }
+    
     return (
        <>
            <ListGroup>
@@ -34,7 +35,7 @@ const ShoppingList = ({items,getItems,deleteItems}) => {
                                     {item.name}
                                 </ListGroupItem>
                             </CSSTransition>)
-                        }): 'Todo list is empty !!'
+                        }): <Spinner type="grow" color="success"/>
                     }
                </TransitionGroup>
            </ListGroup>

@@ -29,6 +29,53 @@ export const loadUser = () => (dispatch,getState) =>{
         })
 }
 
+// register user 
+
+export const register = (payload) => dispatch=>{
+    const {name,email,password} = payload;
+
+    // headers
+    const config = {
+        headers:{
+            'Content-Type':'application/json'
+        }
+    }
+    // Request body
+    const body = JSON.stringify({name,email,password});
+
+    return new Promise(function(resolve, reject) {
+            axios.post('/api/users',body,config)
+            .then(res => {
+                dispatch({
+                    type: REGISTER_SUCCESS,
+                    payload: res.data
+                })
+                resolve({
+                    "msg": "User created successfully",
+                    "data": res.data,
+                    "status": res.status
+                });
+            }
+            )
+            .catch(err =>{
+                dispatch(returnErrors(err.response.data, err.response.status,'REGISTER_FAIL'));
+                dispatch({
+                    type: REGISTER_FAIL
+                });
+                reject({
+                    "msg": err.response.data,
+                    "status": err.response.status
+                });
+            });
+    });   
+}
+
+export const logout = () =>{
+    return {
+        type:LOGOUT_SUCCESS
+    }
+}
+
 //setup config/header and token
 export const tokenConfig = (getState) =>{
       //get token from local storage
