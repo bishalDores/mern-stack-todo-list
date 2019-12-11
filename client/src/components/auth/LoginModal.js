@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Button, NavLink,Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
-import { register } from '../../actions/authActions';
+import { login } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';
 
-const RegisterModal = (props) => {
+const LoginModal = (props) => {
   const {
     className
   } = props;
 
   const [modal, setModal] = useState(false);
   const [userInfo,setUserInfo] = useState({
-      name:'',
       email:'',
       password:'',
   })
@@ -20,17 +19,17 @@ const RegisterModal = (props) => {
   const [authenticate,setAuthenticate] = useState(false);
  
   useEffect(()=>{
-    if(props.error.id === "REGISTER_FAIL"){
+    if(props.error.id === "LOGIN_FAIL"){
         setMsg(props.error.msg.msg)
     }else{
         setMsg(null)
     }
   },[props.error]);
 
-  RegisterModal.propTypes = {
+  LoginModal.propTypes = {
       isAuthenticated: PropTypes.bool,
       error: PropTypes.object.isRequired,
-      register: PropTypes.func.isRequired,
+      login: PropTypes.func.isRequired,
       clearErrors: PropTypes.func.isRequired
   }
 
@@ -41,24 +40,16 @@ const RegisterModal = (props) => {
   
   const onSubmit = e =>{
       e.preventDefault();
-      const {name,email,password} = userInfo;
-      const newUser = {
-          name,
+      const {email,password} = userInfo;
+
+      const user = {
           email,
           password
       }
-       props.register(newUser).then(res => {
-        
-            setModal(false);
-            setUserInfo({
-                ...userInfo,
-                name:'',
-                email:'',
-                password:'',
-            })
-       }).catch(err => {
-           setMsg(err.msg.msg);
-        });
+      props.login(user).then(res =>{
+          setModal(false);
+      })
+      .catch(err => setMsg(err.msg.msg));
     
   }
   const onChangeHandler = (e) =>{
@@ -71,23 +62,13 @@ const RegisterModal = (props) => {
 
   return (
     <div>
-      <NavLink onClick={toggle} href="#">Register</NavLink>
+      <NavLink onClick={toggle} href="#">Login</NavLink>
       <Modal isOpen={modal} toggle={toggle} className={className} onExit={toggle}>
-        <ModalHeader toggle={toggle}>Register</ModalHeader>
+        <ModalHeader toggle={toggle}>Login</ModalHeader>
         <ModalBody>
             {msg ? <Alert color="danger">{msg}</Alert>:null}
             <Form onSubmit={onSubmit} autoComplete="off">
                 <FormGroup>
-                    <Label for="name">Name</Label>
-                    <Input
-                        type="text"
-                        name="name"
-                        id="name"
-                        placeholder="Enter your name"
-                        onChange={onChangeHandler}
-                        className="mb-3"
-                        required
-                    />
                      <Label for="email">Email</Label>
                     <Input
                         type="text"
@@ -109,7 +90,7 @@ const RegisterModal = (props) => {
                         autoComplete="new-password"
                         required
                     />
-                    <Button color="dark" style={{marginTop:'2rem'}} block>Register</Button>
+                    <Button color="dark" style={{marginTop:'2rem'}} block>Login</Button>
                 </FormGroup>
             </Form>
         </ModalBody>
@@ -123,8 +104,8 @@ const mapStateToProps = (state) =>({
 });
 const mapDispatchToProps = dispatch => {
     return{
-        register: payload => dispatch(register(payload)),
+        login: (payload) => dispatch(login(payload)),
         clearErrors: () => dispatch(clearErrors())
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(RegisterModal);
+export default connect(mapStateToProps,mapDispatchToProps)(LoginModal);

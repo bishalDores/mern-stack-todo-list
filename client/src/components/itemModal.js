@@ -31,7 +31,11 @@ const ItemModal = (props) => {
 
   return (
     <div>
-      <Button color="dark" onClick={toggle} style={{marginBottom:'20px'}}>Add Item</Button>
+     {props.isAuthenticated ? 
+     <Button color="dark" onClick={toggle} style={{marginBottom:'20px'}}>Add Item</Button>
+     :
+     <h4 className="mb-4">Please login to manage items</h4>
+    } 
       <Modal isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Add to shopping list</ModalHeader>
         <ModalBody>
@@ -53,7 +57,9 @@ const ItemModal = (props) => {
     </div>
   );
 }
-const mapStateToProps = (state) =>({});
+const mapStateToProps = (state) =>({
+  isAuthenticated: state.auth.isAuthenticated
+});
 const mapDispatchToProps = dispatch => ({
     addItems: (item) => dispatch(addItems(item)),
 

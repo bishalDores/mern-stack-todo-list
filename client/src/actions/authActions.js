@@ -69,6 +69,45 @@ export const register = (payload) => dispatch=>{
             });
     });   
 }
+// login user
+export const login = (payload) => dispatch =>{
+    const {email,password} = payload;
+
+    // headers
+    const config = {
+        headers:{
+            'Content-Type':'application/json'
+        }
+    }
+    // Request body
+    const body = JSON.stringify({email,password});
+
+    return new Promise(function(resolve, reject) {
+            axios.post('/api/auth',body,config)
+            .then(res => {
+                dispatch({
+                    type:  LOGIN_SUCCESS,
+                    payload: res.data
+                })
+                resolve({
+                    "msg": "User logged in successfully",
+                    "data": res.data,
+                    "status": res.status
+                });
+            }
+            )
+            .catch(err =>{
+                dispatch(returnErrors(err.response.data, err.response.status,'LOGIN_FAIL'));
+                dispatch({
+                    type: LOGIN_FAIL
+                });
+                reject({
+                    "msg": err.response.data,
+                    "status": err.response.status
+                });
+            });
+    });  
+}
 
 export const logout = () =>{
     return {

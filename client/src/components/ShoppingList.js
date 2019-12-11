@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { getItems,deleteItems } from '../actions/itemActions';
 
 
-const ShoppingList = ({items,getItems,deleteItems}) => {
+const ShoppingList = ({items,getItems,deleteItems,isAuthenticated}) => {
     useEffect(()=>{
         getItems();
     },[]);
@@ -23,15 +23,19 @@ const ShoppingList = ({items,getItems,deleteItems}) => {
                             return (
                             <CSSTransition key={item._id} timeout={500} classNames="fade">
                                 <ListGroupItem>
-                                    <Button
-                                     className="remove-btn"
-                                     color= "danger"
-                                     size="sm"
-                                     style={{marginRight:'20px'}}
-                                     onClick={()=>onDeleteHandler(item._id)}
-                                    >
-                                        &times;
-                                    </Button>
+                                    {
+                                        isAuthenticated ? 
+                                        <Button
+                                            className="remove-btn"
+                                            color= "danger"
+                                            size="sm"
+                                            style={{marginRight:'20px'}}
+                                            onClick={()=>onDeleteHandler(item._id)}
+                                            >
+                                                &times;
+                                         </Button> : ""
+                                    }
+                                    
                                     {item.name}
                                 </ListGroupItem>
                             </CSSTransition>)
@@ -48,7 +52,8 @@ ShoppingList.propTypes = {
     deleteItems: PropTypes.func.isRequired,
 }
 const mapStateToProps = (state) =>({
-    items: state.item.items
+    items: state.item.items,
+    isAuthenticated: state.auth.isAuthenticated,
 });
 const mapDispatchToProps = dispatch => ({
     getItems: () => dispatch(getItems()),
